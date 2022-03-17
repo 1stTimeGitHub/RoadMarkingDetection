@@ -39,5 +39,6 @@ def get_args():
     return parser.parse_args()
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
     args = get_args()
     extract(args.dir, args.outdir, args.ext, args.n)

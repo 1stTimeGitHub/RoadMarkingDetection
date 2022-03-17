@@ -1,1 +1,8 @@
 env/
+__pycache__/
+bdd100k/
+lightning_logs/
+checkpoints/
+configs/
+wandb/
+RoadMarkingDetection/
