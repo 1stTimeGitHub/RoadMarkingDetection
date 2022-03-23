@@ -17,18 +17,14 @@ class SegmentationNetwork(pl.LightningModule):
 
     def training_step(self, batch, batch_idx):
         _, loss, score = self._get_preds_loss_score(batch)
-
         self.log('Train Score', score)
         self.log('Train Loss', loss)
-
         return loss
 
     def validation_step(self, batch, batch_idx):
         pred, loss, score = self._get_preds_loss_score(batch)
-
         self.log('Validation Score', score)
         self.log('Validation Loss', loss)
-
         return pred
 
     def configure_optimizers(self):

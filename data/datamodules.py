@@ -13,8 +13,13 @@ class RoadImageDataModule(pl.LightningDataModule):
 
     def setup(self, stage: Optional[str] = None):
         if stage == "fit" or stage is None:
+            #Transforms being applied to the training set
             train_transform = transforms.Compose([
                 transforms.Resize([int(720*self.scale), int(1280*self.scale)])
+            ])
+            #Transforms being applied to the validation set
+            val_transforms = transforms.Compose([
+
             ])
 
             self.train = RoadSegmentationDataset('bdd100k/images/10k/train', 'bdd100k/labels/sem_seg/colormaps/train', train=True, scale=self.scale ,transform=train_transform)

@@ -20,7 +20,7 @@ class RoadSegmentationDataset(Dataset):
 
     def __getitem__(self, i):
         id = self.ids[i]
-
+        #Loads the images
         img = self.openimage(self.img_dir, id)
         mask = self.openimage(self.mask_dir, id)
 
@@ -41,9 +41,9 @@ class RoadSegmentationDataset(Dataset):
         masktensor = torch.from_numpy(masknd)
         masktensor = masktensor.unsqueeze(0)
 
+        #Applies transforms if they exist
         if self.transform:
             imgtensor = self.transform(imgtensor)
-            #Shape (1,H,W)
             masktensor = self.transform(masktensor)        
 
         return imgtensor, masktensor 

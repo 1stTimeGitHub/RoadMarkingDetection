@@ -25,14 +25,23 @@ if __name__ == '__main__':
     
     wandb.login()
     wandb_logger = WandbLogger(project="RoadMarkingDetection", log_model="all")
-    trainer = Trainer(gpus=1, logger=wandb_logger, callbacks=[LogPredictionsCallback()])
+    trainer = Trainer(gpus=1, logger=wandb_logger, log_every_n_steps=100, callbacks=[LogPredictionsCallback()])
 
     if args.network == 'pspnet':
         net = smp.PSPNet(encoder_name=args.encoder, encoder_weights='imagenet', in_channels=3, classes=20)
+    elif args.network == 'deeplabv3':
+        net = smp.DeepLabV3(encoder_name=args.encoder, encoder_weights='imagenet', in_channels=3, classes=20)
+    elif args.network == 'deeplabv3+':
+        net = smp.DeepLabV3Plus(encoder_name=args.encoder, encoder_weights='imagenet', in_channels=3, classes=20)
+    #elif args.network == 'unet':
+    #    net = smp.Unet(encoder_name=args.encoder, encoder_weights='imagenet', in_channels=3, classes=20)
+    #elif args.network == 'unet++':
+    #    net = smp.UnetPlusPlus(encoder_name=args.encoder, encoder_weights='imagenet', in_channels=3, classes=20)    
     else:
         logging.warning('Desired network not supported')
         exit()
 
+    #Freezes encoder's weights
     net.encoder.eval()
     for m in net.encoder.modules():
         m.requires_grad_ = False
@@ -41,5 +50,4 @@ if __name__ == '__main__':
     wandb_logger.watch(model)
 
     dm = RoadImageDataModule(scale=args.scale)
-
     trainer.fit(model=model, datamodule=dm)
