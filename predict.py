@@ -49,11 +49,16 @@ if __name__ == "__main__":
 
     if args.network == 'pspnet':
         net = smp.PSPNet(encoder_name=args.encoder, encoder_weights="imagenet", in_channels=3, classes=20)
-        print(net)
-        net.load_state_dict(torch.load(args.checkpoint, map_location=device))
-        net.eval()
+    elif args.network == 'deeplabv3':
+        net = smp.DeepLabV3(encoder_name=args.encoder, encoder_weights='imagenet', in_channels=3, classes=20)
+    elif args.network == 'deeplabv3+':
+        net = smp.DeepLabV3Plus(encoder_name=args.encoder, encoder_weights='imagenet', in_channels=3, classes=20)
     else:
         logging.warning('Desired network not supported!')
         exit()
+
+    #Load checkpoint
+    net.load_state_dict(torch.load(args.checkpoint, map_location=device))
+    net.eval()
 
     segment_road(net, device, args.imgs, args.out)
